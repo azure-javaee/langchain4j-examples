@@ -2,13 +2,13 @@
 <server description="chat server">
 
     <featureManager>
-        <feature>cdi-4.0</feature>
+        <feature>cdi-4.1</feature>
         <feature>jsonb-3.0</feature>
         <feature>mpConfig-3.1</feature>
         <feature>mpMetrics-5.1</feature>
-        <feature>mpOpenAPI-3.1</feature>
-        <feature>restfulWS-3.1</feature>
-        <feature>websocket-2.1</feature>
+        <feature>mpOpenAPI-4.0</feature>
+        <feature>restfulWS-4.0</feature>
+        <feature>websocket-2.2</feature>
     </featureManager>
 
     <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
