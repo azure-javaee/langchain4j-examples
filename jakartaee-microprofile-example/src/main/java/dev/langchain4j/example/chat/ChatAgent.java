@@ -14,9 +14,13 @@ import dev.langchain4j.service.UserMessage;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.util.logging.Logger;
+
 @ApplicationScoped
 public class ChatAgent {
 
+    private static Logger logger = Logger.getLogger(ChatAgent.class.getName());    
+    
     @Inject
     @ConfigProperty(name = "azure.openai.api.key")
     private String AZURE_OPENAI_API_KEY;
@@ -29,6 +33,7 @@ public class ChatAgent {
     @ConfigProperty(name = "azure.openai.endpoint")
     private String AZURE_OPENAI_ENDPOINT;
 
+    @Inject
     @ConfigProperty(name = "hugging.face.api.key")
     private String HUGGING_FACE_API_KEY;
 
@@ -60,8 +65,6 @@ public class ChatAgent {
 
     public Assistant getAssistant() {
         if (assistant == null) {
-
-            /*
             HuggingFaceChatModel model = HuggingFaceChatModel.builder()
                 .accessToken(HUGGING_FACE_API_KEY)
                 .modelId(CHAT_MODEL_ID)
@@ -75,7 +78,9 @@ public class ChatAgent {
                 .chatMemoryProvider(
                     sessionId -> MessageWindowChatMemory.withMaxMessages(MAX_MESSAGES))
                 .build();
-            */
+        }
+        if (!isOnline()) {
+            logger.severe("Unable to connect to model. Trying Azure OpenAI.");
             AzureOpenAiChatModel model = AzureOpenAiChatModel.builder()
                 .apiKey(AZURE_OPENAI_API_KEY)
                 .deploymentName(AZURE_OPENAI_DEPLOYMENT_NAME)
@@ -89,9 +94,25 @@ public class ChatAgent {
                 .chatMemoryProvider(
                                     sessionId -> MessageWindowChatMemory.withMaxMessages(MAX_MESSAGES))
                 .build();
+            if (!isOnline()) {
+                logger.severe("Unable to connect to model. Cannot operate.");
+                assistant = null;
+            }
             
         }
+        
         return assistant;
+    }
+
+    private boolean isOnline() {
+        boolean isOnline = true;
+        try {
+            String sessionId = "" + System.currentTimeMillis();
+            assistant.chat(sessionId, "What is MicroProfile?");
+        } catch (Exception e) {
+            isOnline = false;
+        }
+        return isOnline;
     }
 
     public String chat(String sessionId, String message) {
