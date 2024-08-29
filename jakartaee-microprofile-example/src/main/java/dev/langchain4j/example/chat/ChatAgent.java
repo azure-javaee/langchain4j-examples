@@ -5,6 +5,8 @@ import static java.time.Duration.ofSeconds;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.azure.AzureOpenAiChatModel;
 import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
@@ -16,6 +18,17 @@ import jakarta.inject.Inject;
 public class ChatAgent {
 
     @Inject
+    @ConfigProperty(name = "azure.openai.api.key")
+    private String AZURE_OPENAI_API_KEY;
+    
+    @Inject
+    @ConfigProperty(name = "azure.openai.deployment.name")
+    private String AZURE_OPENAI_DEPLOYMENT_NAME;
+
+    @Inject
+    @ConfigProperty(name = "azure.openai.endpoint")
+    private String AZURE_OPENAI_ENDPOINT;
+
     @ConfigProperty(name = "hugging.face.api.key")
     private String HUGGING_FACE_API_KEY;
 
@@ -47,6 +60,8 @@ public class ChatAgent {
 
     public Assistant getAssistant() {
         if (assistant == null) {
+
+            /*
             HuggingFaceChatModel model = HuggingFaceChatModel.builder()
                 .accessToken(HUGGING_FACE_API_KEY)
                 .modelId(CHAT_MODEL_ID)
@@ -60,6 +75,21 @@ public class ChatAgent {
                 .chatMemoryProvider(
                     sessionId -> MessageWindowChatMemory.withMaxMessages(MAX_MESSAGES))
                 .build();
+            */
+            AzureOpenAiChatModel model = AzureOpenAiChatModel.builder()
+                .apiKey(AZURE_OPENAI_API_KEY)
+                .deploymentName(AZURE_OPENAI_DEPLOYMENT_NAME)
+                .endpoint(AZURE_OPENAI_ENDPOINT)
+                .timeout(ofSeconds(TIMEOUT))
+                .temperature(TEMPERATURE)
+                .maxTokens(MAX_NEW_TOKEN)
+                .build();
+            assistant = AiServices.builder(Assistant.class)
+                .chatLanguageModel(model)
+                .chatMemoryProvider(
+                                    sessionId -> MessageWindowChatMemory.withMaxMessages(MAX_MESSAGES))
+                .build();
+            
         }
         return assistant;
     }

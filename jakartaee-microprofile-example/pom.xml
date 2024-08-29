@@ -17,6 +17,9 @@
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <maven.compiler.release>17</maven.compiler.release>
         <param.hugging.face.api.key>${env.HUGGING_FACE_API_KEY}</param.hugging.face.api.key>
+        <param.azure.openai.api.key>${env.AZURE_OPENAI_API_KEY}</param.azure.openai.api.key>
+        <param.azure.openai.deployment.name>${env.AZURE_OPENAI_DEPLOYMENT_NAME}</param.azure.openai.deployment.name>
+        <param.azure.openai.endpoint>${env.AZURE_OPENAI_ENDPOINT}</param.azure.openai.endpoint>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -37,6 +40,11 @@
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
+            <version>0.33.0</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-azure-open-ai</artifactId>
             <version>0.33.0</version>
         </dependency>
         <dependency>
