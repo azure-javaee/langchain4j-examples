@@ -5,7 +5,6 @@ import static java.time.Duration.ofSeconds;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.azure.AzureOpenAiChatModel;
 import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
 import dev.langchain4j.service.AiServices;
