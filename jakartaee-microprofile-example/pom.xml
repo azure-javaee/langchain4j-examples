@@ -146,8 +146,13 @@
                             <goal>deploy</goal>
                         </goals>
                         <configuration>
-                            <libertyRuntimeVersion>23.0.0.12</libertyRuntimeVersion>
                             <outputDirectory>${project.build.directory}/wlp-package</outputDirectory>
+                            <runtimeArtifact>
+                                <groupId>io.openliberty.beta</groupId>
+                                <artifactId>openliberty-runtime</artifactId>
+                                <version>24.0.0.9-beta</version>
+                                <type>zip</type>
+                            </runtimeArtifact>
                         </configuration>
                     </execution>
                 </executions>
